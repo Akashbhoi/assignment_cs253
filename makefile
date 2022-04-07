@@ -1,3 +1,3 @@
-bookDataBase:
-	g++ -o BookDataBase BookDatabase.cpp
-	./BookDataBase
+make:
+	g++ -o managment main.cpp
+	./managment
