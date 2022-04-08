@@ -11,6 +11,7 @@ void Logout(User *usr);
 int PresentChoice();
 int showOptionProf();
 int showOptionForLib();
+bool isConvertable(string s);
 
 int main()
 { // Gloabal user database
@@ -20,37 +21,45 @@ int main()
 
     while (ch != -1)
     {
-        // ch = PresentChoice();
 
         if (ch == 0)
         {
-            cout << "You have entered the invalid choice.\n";
+            cout << "\t\tYou have entered the invalid choice.\n";
             system("sleep 1\n");
             system("clear\n");
             ch = PresentChoice();
         }
 
-        if (ch == -1)
+        else if (ch == -1)
         {
-            cout << "Exiting succesfully!\n";
+            cout << "\t\tExiting succesfully!\n";
             exit(0);
         }
 
-        if (ch == 1)
+        else if (ch == 1)
         {
             Registation(db);
             cout << "\n\n\n";
             system("sleep 2\n");
             system("clear\n");
+            User *u = Login(db);
+            if (u->id >= 1000)
+            {
+                cout << "Redircting to Login ....\n";
+                system("sleep 2\n");
+                postLogin(u, bd, db);
+            }
         }
-        else
+        else if (ch == 2)
         {
             User *usr = Login(db);
             if (usr->id == 0)
             {
+                cout << "User id = 0\n";
                 cout << "Type c to continue or q to quit\n";
                 string choice;
                 cin >> choice;
+                cin.ignore();
                 if (choice == "c")
                 {
                     system("clear\n");
@@ -61,7 +70,7 @@ int main()
                     exit(0);
                 }
             }
-            if (usr->type == 1)
+            else if (usr->type == 1)
             {
                 // Professor
                 cout << "\t\tWELCOME " << usr->name << " TO THE LIBRARY MANAGMENT SYSTEM\n";
@@ -115,7 +124,8 @@ int main()
                 }
                 else if (pch == 4)
                 {
-                    cout << "Your fine amount is : = " << pf->Calculate_fineAmount() << "\n";
+                    int x = pf->Calculate_fineAmount(); //<< "\n";
+                    cout << "Fine Amoutn : " << x << "\n";
                 }
                 else
                 {
@@ -204,9 +214,8 @@ int main()
                         // ch = PresentChoice();
                     }
                 }
-
             }
-            else
+            else if (usr->type == 3)
             {
                 // Librarian
                 cout << "\t\tWELCOME " << usr->name << " TO THE LIBRARY MANAGMENT SYSTEM\n";
@@ -278,6 +287,7 @@ int main()
 
 void Registation(UserDataBase &db)
 {
+    cout << "\t\t REGISTATION PORTAL\n";
     cout << "\t Enter Your Name : ";
     string name;
     getline(cin, name);
@@ -286,13 +296,12 @@ void Registation(UserDataBase &db)
     cin >> id;
     string password;
     bool isNewEntty = true;
-    ;
+
     while (id < 1000 or id > 9999)
     {
         cout << "Please Enter a valid id or q to quit...\n";
         cout << "\t New ID:";
         string ch;
-        // getline(cin, ch);
         cin >> ch;
         cin.ignore();
         if (ch == "q")
@@ -302,13 +311,12 @@ void Registation(UserDataBase &db)
         }
 
         id = stoi(ch);
-        // isNewEntty = true;
     }
 
     while (db.userList.find(id) != db.userList.end())
     {
 
-        cout << "The userID already taken by someone\n";
+        cout << "\t\tThis USERID has been taken\n";
         cout << "\tRe-Enter a new id or q to quit:";
         string choice;
         cin >> choice;
@@ -388,16 +396,22 @@ void Registation(UserDataBase &db)
 
 User *Login(UserDataBase &db)
 {
+    system("clear");
+    cout << "\t\t LOGIN PORTAL :\n";
     cout << "\tEnter ID :";
-    int id;
-    cin >> id;
+    string ids;
+    cin >> ids;
     cin.ignore();
-
+    int id = 0;
+    if (isConvertable(ids))
+    {
+        id = stoi(ids);
+    }
     cout << "\tPassword : ";
     string password;
     getline(cin, password);
-
-    // cout << id << " " << password << "\n";
+    // cin.ignore();
+    //  cout << id << " " << password << "\n";
 
     while (db.userList.find(id) != db.userList.end())
     {
@@ -410,33 +424,38 @@ User *Login(UserDataBase &db)
         else
         {
             cout << "Wrong Password or UserID enter q to quit\n";
+            system("clear");
+            cout << "\t\tLOGIN PORTAL\n";
             cout << "\tEnter ID :";
             // int id;
             string choice;
+            cin >> choice;
             cin.ignore();
 
             if (choice == "q")
             {
-                return new User;
+                User *usr = new User;
+                usr->id = -1; // Choosen quit
             }
             id = stoi(choice);
             cout << "\tPassword : ";
             // string password;
             getline(cin, password);
+            cin.ignore();
         }
     }
 
-    if (db.userList.find(id) == db.userList.end())
-    {
-        //
-        cout << "No user exsist with the above id\n";
-        cout << "Press c to continue with login system q to quit\n";
-        char c;
-        cin >> c;
-        cin.ignore();
-        if (c == 'c')
-            Login(db);
-    }
+    // if (db.userList.find(id) == db.userList.end())
+    // {
+    //     //
+    //     cout << "\n\t\tNo user exsist with the above id\n";
+    //     cout << "\t\tPress c to continue with login system q to quit\n";
+    //     string c;
+    //     cin >> c;
+    //     cin.ignore();
+    //     if (c == "c")
+    //         Login(db);
+    // }
 
     return new User;
 }
@@ -449,9 +468,8 @@ void Logout(User *usr)
 
 int PresentChoice()
 {
-    // system("clear");
-    cout << "\t Please choose the among following options"
-         << "\n";
+    system("clear");
+    cout << "\t\tDASHBOARD PORTAL : \n";
     cout << "Press 1 for Registation\n";
     cout << "Press 2 for Login\n";
     cout << "Press q to quit\n";
@@ -463,7 +481,7 @@ int PresentChoice()
 
     if (choice == "1")
         return 1;
-    if (choice == "2")
+    else if (choice == "2")
         return 2;
     else
     {
@@ -506,4 +524,229 @@ int showOptionForLib()
         return -1;
 
     return choice[0] - '0';
+}
+
+bool isConvertable(string s)
+{
+    bool ans = true;
+    for (char ch : s)
+    {
+        ans = ans and (ch >= '0' and ch <= '9');
+    }
+    return ans;
+}
+
+void postLogin(User *usr, Book_database &bd, UserDataBase &db)
+{
+    if (usr->id == 0)
+    {
+        return;
+    }
+    else if (usr->type == 1)
+    {
+        // Professor
+        cout << "\t\tWELCOME " << usr->name << " TO THE LIBRARY MANAGMENT SYSTEM\n";
+        Professor *pf = &db.profList[usr->id];
+
+        int pch = showOptionProf();
+
+        if (pch == 1)
+        {
+            // issue book
+            cout << "Enter book name :";
+            string bname;
+            cin >> bname;
+            cin.ignore();
+            Book *myissue;
+
+            for (auto pp : bd.bookList)
+            {
+                if (pp.title == bname)
+                {
+                    myissue = &pp;
+                }
+            }
+
+            if (myissue->isAvailable)
+            {
+                myissue->Book_Request(60);
+                pf->myList.push_back(*myissue);
+            }
+            else
+            {
+                cout << "The Book is not available\n";
+            }
+        }
+        else if (pch == 2)
+        {
+            int cnt = 1;
+            for (auto it : pf->myList)
+            {
+                cout << cnt++ << "\n";
+                it.bookDetails();
+            }
+        }
+        else if (pch == 3)
+        {
+            for (auto book : bd.bookList)
+            {
+                book.bookDetails();
+                cout << "\n";
+            }
+        }
+        else if (pch == 4)
+        {
+            int x = pf->Calculate_fineAmount(); //<< "\n";
+            cout << "Fine Amoutn : " << x << "\n";
+        }
+        else
+        {
+            cout << "Invalid choice!\n";
+            cout << "Press q to exit or any options ";
+            string mychoice;
+            cin >> mychoice;
+            cin.ignore();
+            if (mychoice == "q")
+            {
+                Logout(usr);
+                system("sleep 2\n");
+                system("clear");
+                // ch = PresentChoice();
+            }
+        }
+    }
+    else if (usr->type == 2)
+    {
+        // Student
+        cout << "\t\tWELCOME " << usr->name << " TO THE LIBRARY MANAGMENT SYSTEM\n";
+        Student *pf = &db.stdList[usr->id];
+
+        int pch = showOptionProf();
+
+        if (pch == 1)
+        {
+            // issue book
+            cout << "Enter book name :";
+            string bname;
+            cin >> bname;
+            cin.ignore();
+            Book *myissue;
+
+            for (auto pp : bd.bookList)
+            {
+                if (pp.title == bname)
+                {
+                    myissue = &pp;
+                }
+            }
+
+            if (myissue->isAvailable)
+            {
+                myissue->Book_Request(60);
+                pf->myList.push_back(*myissue);
+            }
+            else
+            {
+                cout << "The Book is not available\n";
+            }
+        }
+        else if (pch == 2)
+        {
+            int cnt = 1;
+            for (auto it : pf->myList)
+            {
+                cout << cnt++ << "\n";
+                it.bookDetails();
+            }
+        }
+        else if (pch == 3)
+        {
+            for (auto book : bd.bookList)
+            {
+                book.bookDetails();
+                cout << "\n";
+            }
+        }
+        else if (pch == 4)
+        {
+            cout << "Your fine amount is : = " << pf->Calculate_fineAmount() << "\n";
+        }
+        else
+        {
+            cout << "Invalid choice!\n";
+            cout << "Press q to exit or any options ";
+            string mychoice;
+            cin >> mychoice;
+            cin.ignore();
+            if (mychoice == "q")
+            {
+                Logout(usr);
+                system("sleep 2\n");
+                system("clear");
+                // ch = PresentChoice();
+            }
+        }
+    }
+    else if (usr->type == 3)
+    {
+        // Librarian
+        cout << "\t\tWELCOME " << usr->name << " TO THE LIBRARY MANAGMENT SYSTEM\n";
+        Librarian *lb = &db.libList[usr->id];
+        int lch = showOptionForLib();
+        if (lch == 1)
+        {
+            // bd
+
+            lb->AddBook(bd);
+        }
+        else if (lch == 2)
+        {
+            cout << "\t\t ENTER ISBN : ";
+            long long int isbn;
+            cin >> isbn;
+            lb->DeleteBook(isbn, bd);
+        }
+        else if (lch == 3)
+        {
+            for (auto book : bd.bookList)
+            {
+                book.bookDetails();
+                cout << "\n";
+            }
+        }
+        else if (lch == 4)
+        {
+            cout << "Enter the id to be deleted :";
+            int nid;
+            cin >> nid;
+            cin.ignore();
+            lb->DeleteUser(nid, db);
+        }
+        else if (lch == 5)
+        {
+            int cnt = 1;
+            for (auto pp : db.userList)
+            {
+                cout << cnt++ << "\n";
+                pp.second.showUser();
+                cout << "\n";
+            }
+        }
+
+        else
+        {
+            cout << "Invalid choice!\n";
+            cout << "Press q to exit or any options ";
+            string mychoice;
+            cin >> mychoice;
+            cin.ignore();
+            if (mychoice == "q")
+            {
+                Logout(usr);
+                system("sleep 2\n");
+                system("clear");
+                // ch = PresentChoice();
+            }
+        }
+    }
 }

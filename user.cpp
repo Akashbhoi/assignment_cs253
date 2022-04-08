@@ -25,6 +25,7 @@ private:
 
 public:
     friend int main();
+    friend void postLogin(User *usr, Book_database &bd, UserDataBase &db);
 };
 
 class Student : public User
@@ -37,7 +38,9 @@ private:
 
 public:
     friend int main();
+     friend void postLogin(User *usr, Book_database &bd, UserDataBase &db);
 };
+
 
 class UserDataBase
 {
@@ -53,6 +56,7 @@ public:
     friend void Registation(UserDataBase &db);
     friend User *Login(UserDataBase &db);
     friend void Logout();
+     friend void postLogin(User *usr, Book_database &bd, UserDataBase &db);
     // friend class UserDataBase;
     friend class Librarian;
 };
@@ -67,6 +71,7 @@ private:
 
 public:
     friend int main();
+    friend void postLogin(User *usr, Book_database &bd, UserDataBase &db);
 };
 
 void Librarian::AddBook(Book_database &bd)

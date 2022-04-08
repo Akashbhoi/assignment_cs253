@@ -13,6 +13,7 @@ class Book
 public:
     bool Book_Request(int x);
     void Show_duedate();
+    void Book_return();
     friend class Book_database;
     friend bool operator<(const Book &, const Book &);
     friend class User;
@@ -20,6 +21,7 @@ public:
     friend class Student;
     friend class Librarian;
     friend int main();
+    friend void postLogin(User *usr, Book_database &bd, UserDataBase &db);
 };
 
 bool operator<(const Book &book1, const Book &book2)
@@ -57,4 +59,12 @@ void Book::Show_duedate()
     cout << "The due date for the " << this->title << " is :";
     dueDate.showDate();
     return;
+}
+
+void Book::Book_return()
+{
+    Date date; // Default 00/00/0000 date
+    this->isAvailable = true;
+    this->issuDate = date;
+    this->dueDate = date;
 }

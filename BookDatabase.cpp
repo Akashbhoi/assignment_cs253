@@ -1,8 +1,7 @@
 
 bool isValidISBN(string ISBN)
 {
-    // cout << "We are checking the ISBN " << ISBN << endl;
-    // cout << "It's Length is " << ISBN.size();
+
     if (ISBN.length() != 13)
     {
         return false;
@@ -11,7 +10,6 @@ bool isValidISBN(string ISBN)
     for (int i = 0; i < 13; i++)
     {
         int x = ISBN[i] - '0';
-        // cout << x << endl;
         if (x >= 0 and x <= 9)
             continue;
         else
@@ -28,12 +26,13 @@ public:
     void Add();
     void Delete(long long int);
     void Update();
-    void Search();
+    vector<Book> Search();
 
     void showDataBase();
 
     Book showOptions(string msg); // My function to show option
     friend int main();
+    friend void postLogin();
 };
 
 Book Book_database::showOptions(string msg)
@@ -201,7 +200,7 @@ void Book_database::Delete(long long int ISBN)
     }
 }
 
-void Book_database::Search()
+vector<Book> Book_database::Search()
 {
     Book book = showOptions("Kindly leave a feild empty if you want to search upon only certain feilds but you can't leave all as empty.");
     if (book.author.empty() and book.publication.empty() and book.title.empty() and book.ISBN == -1)
@@ -221,5 +220,6 @@ void Book_database::Search()
     {
         book.bookDetails();
     }
-}
 
+    return result;
+}
