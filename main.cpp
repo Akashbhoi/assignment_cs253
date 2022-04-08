@@ -117,6 +117,23 @@ int main()
                     int x = pf->Calculate_fineAmount(); //<< "\n";
                     cout << "Fine Amount: " << x << "\n";
                 }
+                else if (pch == 5)
+                {
+                    int cnt = 1;
+                    for (auto it : pf->myList)
+                    {
+                        cout << cnt++ << "\n";
+                        it.bookDetails();
+                    }
+
+                    cout << "Now enter the serial no of the book you want to return ";
+                    int sl;
+                    cin >> sl;
+                    if (sl >= pf->myList.size())
+                        continue;
+                    pf->myList[sl - 1].Book_return();
+                    pf->myList.erase(pf->myList.begin() + sl - 1);
+                }
                 else
                 {
                     cout << "Invalid choice!\n";
@@ -203,6 +220,23 @@ int main()
                 else if (pch == 4)
                 {
                     cout << "Your fine amount is : = " << pf->Calculate_fineAmount() << "\n";
+                }
+                else if (pch == 5)
+                {
+                    int cnt = 1;
+                    for (auto it : pf->myList)
+                    {
+                        cout << cnt++ << "\n";
+                        it.bookDetails();
+                    }
+
+                    cout << "Now enter the serial no of the book you want to return ";
+                    int sl;
+                    cin >> sl;
+                    if (sl >= pf->myList.size())
+                        continue;
+                    pf->myList[sl - 1].Book_return();
+                    pf->myList.erase(pf->myList.begin() + sl - 1);
                 }
                 else
                 {
@@ -472,9 +506,9 @@ void Logout(User *usr)
 }
 
 int PresentChoice()
-{  // system("echo Redirecting....");
+{ // system("echo Redirecting....");
     system("sleep 1");
-  //  system("clear");
+    //  system("clear");
     cout << "\t\tDASHBOARD PORTAL : \n";
     cout << "Press 1 for Registation\n";
     cout << "Press 2 for Login\n";
@@ -501,6 +535,7 @@ int showOptionProf()
     cout << "\t\t Press 2 to SHOW BOOK YOU HAVE ISSUED\n";
     cout << "\t\t Press 3 to SEE ALL THE BOOK IN THE LIBRARY\n";
     cout << "\t\t Press 4 to SEE THE FINE\n";
+    cout << "\t\t Press 5 to RETURN BOOK\n";
     cout << "\t\t Press q to to quit\n";
 
     string choice;
