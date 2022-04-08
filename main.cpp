@@ -125,7 +125,7 @@ int main()
                 else if (pch == 4)
                 {
                     int x = pf->Calculate_fineAmount(); //<< "\n";
-                    cout << "Fine Amoutn : " << x << "\n";
+                    cout << "Fine Amount: " << x << "\n";
                 }
                 else
                 {
@@ -626,28 +626,23 @@ void postLogin(User *usr, Book_database &bd, UserDataBase &db)
         if (pch == 1)
         {
             // issue book
-            cout << "Enter book name :";
-            string bname;
-            cin >> bname;
-            cin.ignore();
-            Book *myissue;
+            // cout << "Enter book name :";
+            // string bname;
+            // cin >> bname;
+            // cin.ignore();
 
-            for (auto pp : bd.bookList)
+            vector<Book> listBook = bd.Search();
+            for (auto myissue : listBook)
             {
-                if (pp.title == bname)
+                if (myissue.isAvailable)
                 {
-                    myissue = &pp;
+                    myissue.Book_Request(60);
+                    pf->myList.push_back(myissue);
                 }
-            }
-
-            if (myissue->isAvailable)
-            {
-                myissue->Book_Request(60);
-                pf->myList.push_back(*myissue);
-            }
-            else
-            {
-                cout << "The Book is not available\n";
+                else
+                {
+                    cout << "The Book is not available\n";
+                }
             }
         }
         else if (pch == 2)
@@ -713,6 +708,7 @@ void postLogin(User *usr, Book_database &bd, UserDataBase &db)
                 book.bookDetails();
                 cout << "\n";
             }
+           // system("sleep 4\n");
         }
         else if (lch == 4)
         {
