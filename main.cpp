@@ -42,20 +42,20 @@ int main()
             cout << "\n\n\n";
             system("sleep 2\n");
             system("clear\n");
-            User *u = Login(db);
-            if (u->id >= 1000)
-            {
-                cout << "Redircting to Login ....\n";
-                system("sleep 2\n");
-                postLogin(u, bd, db);
-            }
+            // User *u = Login(db);
+            // if (u->id >= 1000)
+            // {
+            //     cout << "Redircting to Login ....\n";
+            //     system("sleep 2\n");
+            //     postLogin(u, bd, db);
+            //     Logout(u);
+            // }
         }
         else if (ch == 2)
         {
             User *usr = Login(db);
             if (usr->id == 0)
             {
-                cout << "User id = 0\n";
                 cout << "Type c to continue or q to quit\n";
                 string choice;
                 cin >> choice;
@@ -80,29 +80,19 @@ int main()
 
                 if (pch == 1)
                 {
-                    // issue book
-                    cout << "Enter book name :";
-                    string bname;
-                    cin >> bname;
-                    cin.ignore();
-                    Book *myissue;
-
-                    for (auto pp : bd.bookList)
+                    vector<Book> listBook = bd.Search();
+                    for (auto myissue : listBook)
                     {
-                        if (pp.title == bname)
+                        if (myissue.isAvailable)
                         {
-                            myissue = &pp;
+                            myissue.Book_Request(60);
+                            pf->myList.push_back(myissue);
+                            break;
                         }
-                    }
-
-                    if (myissue->isAvailable)
-                    {
-                        myissue->Book_Request(60);
-                        pf->myList.push_back(*myissue);
-                    }
-                    else
-                    {
-                        cout << "The Book is not available\n";
+                        else
+                        {
+                            cout << "The Book is not available\n";
+                        }
                     }
                 }
                 else if (pch == 2)
@@ -154,28 +144,43 @@ int main()
                 if (pch == 1)
                 {
                     // issue book
-                    cout << "Enter book name :";
-                    string bname;
-                    cin >> bname;
-                    cin.ignore();
-                    Book *myissue;
+                    // cout << "Enter book name :";
+                    // string bname;
+                    // cin >> bname;
+                    // cin.ignore();
+                    // Book *myissue;
 
-                    for (auto pp : bd.bookList)
+                    // for (auto pp : bd.bookList)
+                    // {
+                    //     if (pp.title == bname)
+                    //     {
+                    //         myissue = &pp;
+                    //     }
+                    // }
+
+                    // if (myissue->isAvailable)
+                    // {
+                    //     myissue->Book_Request(60);
+                    //     pf->myList.push_back(*myissue);
+                    // }
+                    // else
+                    // {
+                    //     cout << "The Book is not available\n";
+                    // }
+
+                    vector<Book> listBook = bd.Search();
+                    for (auto myissue : listBook)
                     {
-                        if (pp.title == bname)
+                        if (myissue.isAvailable)
                         {
-                            myissue = &pp;
+                            myissue.Book_Request(60);
+                            pf->myList.push_back(myissue);
+                            break;
                         }
-                    }
-
-                    if (myissue->isAvailable)
-                    {
-                        myissue->Book_Request(60);
-                        pf->myList.push_back(*myissue);
-                    }
-                    else
-                    {
-                        cout << "The Book is not available\n";
+                        else
+                        {
+                            cout << "The Book is not available\n";
+                        }
                     }
                 }
                 else if (pch == 2)
@@ -467,8 +472,9 @@ void Logout(User *usr)
 }
 
 int PresentChoice()
-{
-    system("clear");
+{  // system("echo Redirecting....");
+    system("sleep 1");
+  //  system("clear");
     cout << "\t\tDASHBOARD PORTAL : \n";
     cout << "Press 1 for Registation\n";
     cout << "Press 2 for Login\n";
@@ -552,29 +558,19 @@ void postLogin(User *usr, Book_database &bd, UserDataBase &db)
 
         if (pch == 1)
         {
-            // issue book
-            cout << "Enter book name :";
-            string bname;
-            cin >> bname;
-            cin.ignore();
-            Book *myissue;
-
-            for (auto pp : bd.bookList)
+            vector<Book> listBook = bd.Search();
+            for (auto myissue : listBook)
             {
-                if (pp.title == bname)
+                if (myissue.isAvailable)
                 {
-                    myissue = &pp;
+                    myissue.Book_Request(60);
+                    pf->myList.push_back(myissue);
+                    break;
                 }
-            }
-
-            if (myissue->isAvailable)
-            {
-                myissue->Book_Request(60);
-                pf->myList.push_back(*myissue);
-            }
-            else
-            {
-                cout << "The Book is not available\n";
+                else
+                {
+                    cout << "The Book is not available\n";
+                }
             }
         }
         else if (pch == 2)
@@ -638,6 +634,7 @@ void postLogin(User *usr, Book_database &bd, UserDataBase &db)
                 {
                     myissue.Book_Request(60);
                     pf->myList.push_back(myissue);
+                    break;
                 }
                 else
                 {
@@ -708,7 +705,7 @@ void postLogin(User *usr, Book_database &bd, UserDataBase &db)
                 book.bookDetails();
                 cout << "\n";
             }
-           // system("sleep 4\n");
+            // system("sleep 4\n");
         }
         else if (lch == 4)
         {
